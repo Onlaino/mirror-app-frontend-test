@@ -1,3 +1,5 @@
+import { getPostDate } from '@/shared/lib/getPostDate';
+
 type PostItemProps = {
 	caption: string;
 	comments: number;
@@ -6,19 +8,32 @@ type PostItemProps = {
 	template: string;
 };
 
-export const PostItem = ({ caption, comments, date, likes, template }: PostItemProps) => {
+export const PostItem = ({
+	caption,
+	comments,
+	date,
+	likes,
+	template,
+}: PostItemProps) => {
+	const cardClass =
+		template === 'classic'
+			? 'hover:shadow-lg hover:bg-gray/50'
+			: 'hover:-translate-y-0.5 hover:bg-blue-200';
+
 	return (
-		<div className='mt-4 relative p-4 border-2 border-violet-600 rounded-md'>
-			<div className='absolute top-2 right-2 text-orange-500'>
-				date: {new Date(date).getHours()}
+		<div
+			className={`${cardClass} mt-4 relative p-4 rounded-md shadow-md flex flex-col justify-between transition-all cursor-pointer`}
+		>
+			<div className='text-black font-bold border-b-2'>
+				Date: {getPostDate(date)}
 			</div>
-			<div className='absolute top-2 left-2 p-2 rounded-lg bg-black flex justify-center hover:bg-gray transition-all'>
-				<span className='text-white bold'>&#9825; {likes} </span>
+			<div className='pt-1 italic'>{caption}</div>
+			<div className='py-2  flex flex-col items-start gap-1 '>
+				<div className='text-sm text-black'>comments: {comments}</div>
+				<div className=' p-1 shadow-sm text-black font-medium rounded-lg  hover:bg-gray transition-all'>
+					👍&nbsp;{likes}{' '}
+				</div>
 			</div>
-			<div className='absolute bottom-2 right-2 text-sm text-white'>
-				comments: {comments}
-			</div>
-			<div className='pt-10 italic'>{caption}</div>
 		</div>
 	);
 };

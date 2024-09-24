@@ -4,9 +4,9 @@ import { PostsList } from '@/widgets/postsList/ui/PostList'
 
 export const PostPage = () => {
 	return (
-		<section>
+		<>
 			<Header />
 			<PostsList />
-		</section>
+		</>
 	)
 }

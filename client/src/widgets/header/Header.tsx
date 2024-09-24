@@ -10,34 +10,53 @@ export const Header = () => {
 
 	const renderInfo = () => {
 		return (
-			<>
-				<p className='text-xl text-white italic'>Current layout: {current}</p>
-				<p className='text-xl text-white italic'>
-					Current rows: {current === 'grid' ? grid.rows : masonry.rows}
-				</p>
-				<p className='text-xl text-white italic'>
-					Current columns:
-					{current === 'grid' ? grid.columns : masonry.columns}
-				</p>
-				<p className='text-xl text-white italic'>Template: {template}</p>
-				<p className='text-xl text-white italic'>Navigation: {navigation}</p>
-			</>
+			<div className='flex gap-6'>
+				{error && <h1>{error}</h1>}
+				<div>
+					<p className='text-xl text-white italic'>
+						<span className='text-[#FAA72D] font-bold'>
+							Current layout:&nbsp;
+						</span>{' '}
+						{current}
+					</p>
+					<p className='text-xl text-white italic'>
+						<span className='text-[#FAA72D] font-bold'>
+							Current rows:&nbsp;
+						</span>
+						{current === 'grid' ? grid.rows : masonry.rows}
+					</p>
+					<p className='text-xl text-white italic'>
+						<span className='text-[#FAA72D] font-bold'>
+							Current columns:&nbsp;
+						</span>
+						{current === 'grid' ? grid.columns : masonry.columns}
+					</p>
+				</div>
+				<div>
+					<p className='text-xl text-white italic'>
+						<span className='text-[#FAA72D] font-bold'>Template:&nbsp;</span>{' '}
+						{template}
+					</p>
+					<p className='text-xl text-white italic'>
+						<span className='text-[#FAA72D] font-bold'>Navigation:&nbsp;</span>{' '}
+						{navigation}
+					</p>
+				</div>
+			</div>
 		);
 	};
 
 	return (
-		<header className='flex justify-around p-3 bg-black/60 rounded-xl'>
-			<div className='flex flex-col'>
-				{error && <h1>{error}</h1>}
-				{loading ? (
-					<h1 className='text-white italic'>Loading...</h1>
-				) : (
-					renderInfo()
-				)}
-			</div>
+		<header className='mt-1 p-2 relative bg-[#2C4858] rounded-md h-24'>
+			{loading ? (
+				<h1 className='text-white italic'>Loading...</h1>
+			) : (
+				renderInfo()
+			)}
+
 			<button
 				onClick={updateSettings}
-				className='text-sm uppercase text-black italic bg-slate-300 rounded-xl p-3 hover:bg-slate-500 transition-all'
+				className='absolute top-3 right-3 text-sm uppercase bg-white text-black border-2 border-black-400 rounded-md hover:bg-blue-100 py-1 px-2 hover:border-blue-400 transition-all h-10 w-15 active:translate-y-1'
 			>
 				Update settings
 			</button>

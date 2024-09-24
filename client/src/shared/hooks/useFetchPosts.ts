@@ -7,14 +7,16 @@ export const useFetchPosts = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [totalPages, setTotalPages] = useState<number>(1); 
 
-	const loadPosts = async (page: number = 1) => {
+	const loadPosts = async (page: number = 1, append: boolean = false) => {
 		try {
 			setLoading(true);
-			const postsData = await fetchPosts(page);
-			setPosts((prevPosts) => [...prevPosts, ...postsData]);
+			const { data, totalPages } = await fetchPosts(page);
+			setPosts((prevPosts) => (append ? [...prevPosts, ...data] : data)); 
+			setTotalPages(totalPages); 
 		} catch (error) {
-			console.error(error);
+			console.error(error)
 			setError('Failed to load posts');
 		} finally {
 			setLoading(false);
@@ -22,15 +24,29 @@ export const useFetchPosts = () => {
 	};
 
 	useEffect(() => {
-		console.log(`useEffect called for page: ${currentPage}`);
-		loadPosts(currentPage);
+		loadPosts(currentPage, false);
 	}, [currentPage]);
 
 	const fetchMorePosts = () => {
-		  if (!loading) {
-				setCurrentPage((prev) => prev + 1);
-			}
+		setCurrentPage((prev) => prev + 1);
 	};
 
-	return { posts, loading, error, fetchMorePosts };
+	const goToNextPage = () => {
+		if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
+	};
+
+	const goToPrevPage = () => {
+		if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
+	};
+
+	return {
+		posts,
+		loading,
+		error,
+		currentPage,
+		totalPages,
+		fetchMorePosts,
+		goToNextPage,
+		goToPrevPage,
+	};
 };
