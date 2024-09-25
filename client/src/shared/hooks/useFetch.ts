@@ -1,5 +1,6 @@
 import { IPosts } from '@/entities/posts/model/type';
 import { useEffect, useState } from 'react';
+import { axiosInstance } from '../api/axiosInstance';
 
 export const useFetch = (navigation: string) => {
 	const [data, setData] = useState<IPosts[]>([]);
@@ -13,23 +14,18 @@ export const useFetch = (navigation: string) => {
 		const fetchPosts = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch(
-					`http://localhost:4000/posts?_page=${currentPage}&_limit=${postsPerPage}`
+				const res = await axiosInstance.get(
+					`/posts?_page=${currentPage}&_limit=${postsPerPage}`
 				);
 
 				if (navigation === 'pagination') {
-					const newPosts = await res.json();
-					setData(newPosts);
-					const totalPosts = res.headers.get('X-Total-Count');
-					setTotalPosts(Number(totalPosts));
+					setData(res.data);
+					setTotalPosts(Number(res.headers['x-total-count']));
 				}
 
 				if (navigation === 'load-more') {
-					const newPosts = await res.json();
-					const totalPosts = res.headers.get('X-Total-Count');
-
-					setData((prevPosts) => [...prevPosts, ...newPosts]);
-					setTotalPosts(Number(totalPosts));
+					setData((prevPosts) => [...prevPosts, ...res.data]);
+					setTotalPosts(Number(res.headers['x-total-count']));
 				}
 			} catch (err) {
 				console.log(err);
