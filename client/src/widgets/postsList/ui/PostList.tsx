@@ -1,7 +1,8 @@
 import { LayoutContext } from '@/entities/context/LayoutContext';
-import { useFetch } from '@/shared/hooks/useFetch';
+import { usePosts } from '@/shared/hooks/usePosts';
 import { useContext } from 'react';
 import { PostItem } from './PostItem';
+import { getPostStyle } from '../lib/getPostStyle';
 
 export const PostsList = () => {
 	const {
@@ -20,37 +21,15 @@ export const PostsList = () => {
 		goToNextPage,
 		goToPrevPage,
 		loadMore,
-	} = useFetch(settings?.navigation || 'pagination');
+	} = usePosts(settings?.navigation || 'pagination');
+
+	const { layout, navigation, template } = settings || {};
+	const currentLayout = layout?.current;
+	const postStyle = getPostStyle(currentLayout, layout);
 
 	if (settingsLoading || postsLoading) return <div>Loading...</div>;
 	if (settingsError) return <div>Error loading settings: {settingsError}</div>;
 	if (postsError) return <div>Error loading posts: {postsError}</div>;
-
-	const { layout, navigation, template } = settings || {};
-	const currentLayout = layout?.current;
-
-	const getPostStyle = () => {
-		if (currentLayout === 'grid') {
-			const gridParams = layout?.params.grid;
-			return {
-				display: 'grid',
-				gridTemplateColumns: `repeat(${gridParams?.columns}, 1fr)`,
-				gridTemplateRows: `repeat(${gridParams?.rows}, 1fr)`,
-				gap: '16px',
-			};
-		}
-
-		if (currentLayout === 'masonry') {
-			const masonryParams = layout?.params.masonry;
-			return {
-				display: 'grid',
-				gridTemplateColumns: `repeat(${masonryParams?.columns}, 1fr)`,
-				gridTemplateRows: `repeat(${masonryParams?.rows}, 1fr)`,
-				gap: '16px',
-			};
-		}
-	};
-	const postStyle = getPostStyle();
 
 	return (
 		<div style={postStyle}>
