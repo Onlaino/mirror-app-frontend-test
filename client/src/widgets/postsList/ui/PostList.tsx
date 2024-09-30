@@ -11,6 +11,7 @@ export const PostsList = () => {
 		loading: settingsLoading,
 	} = useContext(LayoutContext);
 
+
 	const {
 		data: posts,
 		loading: postsLoading,
